@@ -160,35 +160,3 @@ exports.editProduct = async (req, res) => {
   };
   
   
-// API to upload and save product image
-exports.aploadimages =  async (req, res) => {
-  const { productName, Description, Price,Stock, CategoryID,image } = req.body;
- 
-  upload.single(image)
-  const imagePath = req.body.image ? `/uploads/${req.file.filename}` : null;
-
-  if (!productName || !CategoryID || !Price) {
-    return res.status(400).json({ error: 'Missing required fields' });
-  }
-
-  try {
-    const pool = await sql.connect(dbConfig);
-        await pool.request()
-      .input('Name', sql.VarChar, productName)
-      .input('Description', sql.Text, Description)
-      .input('CategoryID', sql.Int, CategoryID)
-      .input('Price', sql.Float, Price)
-      .input('Stock', sql.Int, Stock)
-
-      .input('ImagePath', sql.VarChar, imagePath)
-      .query(`
-        INSERT INTO Products (Name, Description, Price, Stock, CategoryID, ImagePath)
-        VALUES (@Name, @Description, @Price, @Stock, @CategoryID, @ImagePath)
-      `);
-
-    res.status(200).json({ message: 'Product uploaded successfully' });
-  } catch (err) {
-    console.error('Error saving product:', err);
-    res.status(500).json({ error: 'Failed to save product' });
-  }
-};

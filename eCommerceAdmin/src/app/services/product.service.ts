@@ -22,7 +22,7 @@ export class ProductService {
 
   // Create a product
   createProduct(formData: FormData): Observable<any> {
-    return this.http.post('http://localhost:5000/api/products/upload', formData);
+    return this.http.post('http://localhost:5000/api/products/create', formData);
   }
 
   // Update a product
